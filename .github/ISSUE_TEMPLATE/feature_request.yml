@@ -1,0 +1,42 @@
+name: Feature request
+description: Request a product capability, integration, or workflow improvement.
+title: "feature: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you solving?
+      placeholder: Our ops team can review alerts, but we need a Slack relay before the webhook is useful.
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: What outcome do you want?
+      placeholder: Operators should receive actionable alerts in Slack with a deep link back to replay evidence.
+    validations:
+      required: true
+  - type: dropdown
+    id: persona
+    attributes:
+      label: Primary user
+      options:
+        - Buyer evaluator
+        - Operator
+        - Admin
+        - Integration engineer
+        - Grant reviewer
+    validations:
+      required: true
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints or dependencies
+      placeholder: Needs to work with Google login first, wallet login later, and no custom backend on the buyer side.
+  - type: textarea
+    id: success
+    attributes:
+      label: What does success look like?
+      placeholder: A new destination type, test delivery flow, and delivery history entries visible in the console.

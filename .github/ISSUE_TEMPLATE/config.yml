@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Go-live guide
+    url: https://github.com/SuiForge/product-api/blob/main/docs/go-live.md
+    about: Start here for deployment, buyer demos, and grant-ready setup.
+  - name: Design partner pilot plan
+    url: https://github.com/SuiForge/product-api/blob/main/docs/design-partner-pilot.md
+    about: Use this when scoping a buyer-facing pilot.

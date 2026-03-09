@@ -1,0 +1,55 @@
+name: Design partner pilot
+description: Track a buyer-facing pilot or ecosystem onboarding request.
+title: "pilot: "
+labels:
+  - pilot
+  - business
+body:
+  - type: input
+    id: org
+    attributes:
+      label: Organization
+      placeholder: Example Protocol
+    validations:
+      required: true
+  - type: dropdown
+    id: segment
+    attributes:
+      label: Segment
+      options:
+        - Protocol treasury
+        - Trading desk
+        - Infrastructure provider
+        - Ecosystem app
+        - Foundation or grant reviewer
+    validations:
+      required: true
+  - type: textarea
+    id: use_case
+    attributes:
+      label: Primary use case
+      placeholder: Monitor treasury wallets and route alerts into an internal webhook gateway.
+    validations:
+      required: true
+  - type: checkboxes
+    id: needs
+    attributes:
+      label: What does this pilot need?
+      options:
+        - label: Google login
+        - label: Sui wallet login
+        - label: API key issuance
+        - label: Webhook test delivery
+        - label: Replay evidence
+        - label: Public HTTPS demo
+        - label: Live upstream data
+  - type: textarea
+    id: timeline
+    attributes:
+      label: Timeline and urgency
+      placeholder: Need a demo-ready environment this week for partner review.
+  - type: textarea
+    id: success
+    attributes:
+      label: Success criteria
+      placeholder: Partner signs in, sees pilot-ready readiness, receives a signed webhook, and validates one replay flow.

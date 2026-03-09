@@ -1,44 +1,148 @@
-# product-api
+# Sui Alert Ops
 
-Outward-facing product service for `Sui Alert Ops`.
+[![CI](https://github.com/SuiForge/product-api/actions/workflows/ci.yml/badge.svg)](https://github.com/SuiForge/product-api/actions/workflows/ci.yml)
 
-## What it exposes
+Outward-facing product API and operator console for wallet-native alerting on Sui.
 
-- `Sui Alert Ops`: real-time alerting and incident response for Sui teams
-- `Overview`: unified workspace, usage, and alert summary
-- `Alerts`: anomaly feed and alert list backed by vertical index upstream
-- `Destinations`: webhook configuration and signed test delivery
-- `Replay`: evidence replay for alert investigation
-- `Auth + Access`: Google login, wallet login, session auth, API key validation
+`Sui Alert Ops` turns a bundle of lower-level platform capabilities into one product surface that a buyer, design partner, or grant reviewer can open today. From one console, teams can sign in with Google or a Sui wallet, inspect readiness, review alerts, issue API keys, configure webhooks, and replay incidents.
 
-Internal supporting capabilities such as execution reads, risk checks, tenant plumbing, and indexer-backed data remain available behind this product service, but they are no longer the primary outward-facing product story.
+## Why this repo exists
 
-## Run
+- buyers want a product, not a list of backend services
+- grant reviewers want proof that the product can be opened and verified quickly
+- operators need one flow for auth, alert review, webhook setup, and incident replay
+- platform capabilities still exist underneath, but this repo packages them into one sellable service
+
+## What is already working
+
+- Google-ready operator login surface and real Sui wallet signature login
+- persistent monitors, webhook destinations, delivery history, and API keys
+- `GET /v1/alert-ops/readiness` for demo / pilot / production status checks
+- real webhook signing and test delivery flows
+- replayable alert evidence and operator console walkthrough
+- public deployment artifacts with Docker, Caddy, and systemd examples
+- GitHub Actions CI for backend validation, smoke checks, and browser E2E
+
+## Who this is for
+
+- Sui protocol teams that need treasury, risk, or whale monitoring
+- market-making or operations teams that need webhook-based alert routing
+- ecosystem projects that want a buyer-facing or grant-facing demo quickly
+- internal operators who need Google access first and wallet-native actions second
+
+## Quick links
+
+- Product go-live guide: `docs/go-live.md`
+- Design partner pilot plan: `docs/design-partner-pilot.md`
+- Grant package outline: `docs/grant-package.md`
+- Google login launch: `docs/google-login-launch.md`
+- Domain and DNS setup: `docs/domain-dns-setup.md`
+- Public deployment plan: `docs/plans/2026-03-09-public-deployment.md`
+
+## Fast local demo
 
 ```bash
 bash scripts/run-local.sh
 ```
 
-Default port:
-- `PRODUCT_API_PORT=8088`
+Default local URLs:
 
-Wallet signature login uses a bundled Node verifier at runtime, so `node` must be available on the host.
+- console: `http://127.0.0.1:8088/console`
+- health: `http://127.0.0.1:8088/health`
+- readiness: `http://127.0.0.1:8088/v1/alert-ops/readiness`
 
-Default local runtime state persists to `data/product-api-state.json`, so created monitors and webhook destinations survive restarts. Override it with `PRODUCT_API_DATA_FILE` if needed.
+Notes:
+
+- default port is `PRODUCT_API_PORT=8088`
+- wallet signature login uses a bundled Node verifier at runtime, so `node` must be available on the host
+- local state persists to `data/product-api-state.json`, so created monitors, webhook destinations, deliveries, and API keys survive restarts
+
+## Fast public demo deployment
+
+The fastest way to get a shareable buyer-facing or grant-facing URL is the included Docker + Caddy stack.
+
+```bash
+./scripts/init-production-env.sh alertops.example.com example.com
+./scripts/check-production-env.sh
+./scripts/deploy-public.sh
+./scripts/verify-public-demo.sh https://alertops.example.com
+```
+
+Deployment assets included in this repo:
+
+- `Dockerfile`
+- `deploy/docker-compose.public.yml`
+- `deploy/Caddyfile`
+- `deploy/sui-alert-ops.service`
+- `.env.production.example`
+
+Manual alternative:
+
+```bash
+cp .env.production.example .env.production
+cd deploy
+docker compose --env-file ../.env.production -f docker-compose.public.yml up -d --build
+```
+
+## Buyer and grant demo flow
+
+Open `/console` and walk through:
+
+1. sign in with Google, wallet, or demo fallback
+2. show `Go-Live Readiness`
+3. load overview and live alerts
+4. create a monitor from a template
+5. create a webhook destination
+6. send a signed test webhook
+7. open replay evidence for one alert
+8. issue one API key and validate it
+
+This gives reviewers a complete story: access, readiness, monitoring, delivery, and investigation.
+
+## Product surfaces
+
+- `Overview`: workspace, usage, and product summary
+- `Alerts`: alert feed and investigation entry point
+- `Monitor Builder`: rule-template-based monitor creation
+- `Destinations`: webhook configuration and signed test delivery
+- `Replay`: evidence replay for incident investigation
+- `Auth + Access`: Google login, Sui wallet login, session auth, and API key validation
+
+Internal supporting capabilities such as execution reads, risk checks, tenant plumbing, and indexer-backed data remain available behind this service, but they are no longer the primary outward-facing story.
+
+## Auth model
+
+Real sign-in paths:
+
+- Google popup login backed by a verified Google ID token
+- Sui wallet signature login backed by a server-issued nonce and signature verification
+
+Compatibility path:
+
+- `POST /v1/auth/login` remains available as a fast demo fallback and still requires a valid Sui wallet address
+
+Access model:
+
+- product endpoints under `/v1/*` require either an authenticated session or a validated `X-API-Key`, except for auth routes
+- wallet login remains the required path for wallet-bound actions such as API key generation and webhook provisioning
+- Google login is the best first step for buyers or grant reviewers who should inspect the product before connecting a wallet
 
 ## Optional upstream wiring
 
 Execution upstream:
+
 - `DEEPBOOK_API_BASE_URL`
 - `DEEPBOOK_API_TOKEN`
 - `DEEPBOOK_API_TIMEOUT`
 
-Alerts / tenant upstream:
+Alerts and tenant upstream:
+
 - `VERTICAL_INDEX_API_BASE_URL`
 - `VERTICAL_INDEX_API_KEY`
 - `VERTICAL_INDEX_API_TIMEOUT`
 
-Session auth:
+Session and identity configuration:
+
 - `PRODUCT_API_SESSION_SECRET`
 - `PRODUCT_API_SESSION_TTL`
 - `PRODUCT_API_SESSION_COOKIE_SECURE`
@@ -49,21 +153,11 @@ Session auth:
 - `PRODUCT_API_GOOGLE_HOSTED_DOMAIN`
 - `PRODUCT_API_DATA_FILE`
 
-Wallet login flow:
-- `POST /v1/auth/wallet/nonce`
-- `POST /v1/auth/wallet/verify`
-
-Google login flow:
-- `GET /v1/auth/providers`
-- `POST /v1/auth/google/verify`
-
-Legacy demo fallback login remains available at `POST /v1/auth/login` and still requires a valid Sui wallet address in addition to workspace and operator names.
-
-If upstreams are not configured, product endpoints that depend on them return `501 not_implemented`.
+If upstreams are not configured, endpoints that depend on them return `501 not_implemented` and the product remains in demo mode for those surfaces.
 
 ## Key routes
 
-Primary product namespace:
+Primary product routes:
 
 - `GET /health`
 - `GET /console`
@@ -78,7 +172,7 @@ Primary product namespace:
 - `POST /v1/alert-ops/deliveries/:deliveryId/retry`
 - `GET /v1/alert-ops/replays/:evidenceId`
 
-Auth namespace:
+Auth routes:
 
 - `GET /v1/auth/providers`
 - `POST /v1/auth/google/verify`
@@ -89,7 +183,7 @@ Auth namespace:
 - `GET /v1/auth/session`
 - `POST /v1/auth/logout`
 
-Compatibility / internal capability routes:
+Compatibility and internal capability routes:
 
 - `POST /v1/risk/check`
 - `GET /v1/replays/:evidenceId`
@@ -102,99 +196,39 @@ Compatibility / internal capability routes:
 - `GET /v1/projects/me/api-keys`
 - `POST /v1/projects/me/api-keys`
 
-## Demo flow
+## Verify
 
-Open `/console` and complete:
-- `Sign in with Google, wallet, or demo fallback`
-- `Review go-live readiness`
-- `Load alert ops overview`
-- `Inspect live alerts`
-- `Configure webhook delivery`
-- `Review delivery history`
-- `Open replay evidence`
+```bash
+go test ./... -count=1
+PRODUCT_API_SMOKE_RUN_SERVER=true bash scripts/smoke.sh
+npm run test:e2e
+```
 
-The console now supports two real sign-in paths:
-- Google popup login backed by a verified Google ID token
-- Sui wallet signature login backed by a server-issued nonce and signature verification
+What verification covers:
 
-Product endpoints under `/v1/*` require either an authenticated session or a validated `X-API-Key`, except for the auth routes above.
+- health and auth provider exposure
+- readiness status
+- demo fallback login
+- real Sui wallet nonce, sign, and verify flow
+- API key create, list, and validate
+- destination create, signed test delivery, history, and retry path
+- risk and replay happy path
+- browser-based console walkthrough and logout relock flow
 
-Notes:
-- Google login needs a real `PRODUCT_API_GOOGLE_CLIENT_ID` from Google Identity Services.
-- Sui wallet login remains the required path for wallet-bound actions such as API key generation and webhook provisioning against wallet-scoped upstream services.
-- `GET /v1/alert-ops/readiness` summarizes whether the service is still demo-only, pilot-ready, or production-ready.
-- If you only want a fast local product walkthrough, Demo Fallback also accepts a pasted valid Sui wallet address without a connected extension.
+If Playwright browser downloads are blocked in your network, local E2E uses the installed Google Chrome channel by default. CI installs Playwright Chromium automatically.
 
-If you change the wallet UI bundle or verifier bundle, rebuild them with:
+## Rebuild wallet auth bundle
 
 ```bash
 npm install
 npm run build:wallet-auth
 ```
 
-If you want to keep placeholders and wire real values later, copy the template first:
+## Environment bootstrap
+
+If you want to keep placeholders and wire real values later:
 
 ```bash
 cp .env.example .env.local
 PRODUCT_API_ENV_FILE=.env.local bash scripts/run-local.sh
 ```
-
-For a deployment checklist and grant / pilot handoff notes, see `docs/go-live.md`.
-For a Google sign-in launch checklist, see `docs/google-login-launch.md`.
-For DNS and public domain alignment, see `docs/domain-dns-setup.md`.
-
-For a public HTTPS demo deployment, the repo now includes:
-
-- `Dockerfile`
-- `deploy/docker-compose.public.yml`
-- `deploy/Caddyfile`
-- `deploy/sui-alert-ops.service`
-- `.env.production.example`
-
-Quick start:
-
-```bash
-./scripts/init-production-env.sh alertops.example.com example.com
-./scripts/check-production-env.sh
-./scripts/deploy-public.sh
-./scripts/verify-public-demo.sh https://alertops.example.com
-```
-
-Manual alternative:
-
-```bash
-cp .env.production.example .env.production
-cd deploy
-docker compose --env-file ../.env.production -f docker-compose.public.yml up -d --build
-```
-
-## Verify
-
-```bash
-go test ./... -count=1
-bash scripts/smoke.sh
-npm run test:e2e
-```
-
-`bash scripts/smoke.sh` now checks:
-- health
-- auth providers exposure
-- go-live readiness
-- legacy fallback login
-- API key create + list + validate
-- destination create + delivery history path
-- real Sui wallet nonce/sign/verify flow
-- risk + replay happy path
-
-`npm run test:e2e` runs a Playwright browser acceptance suite against a real local server on `http://127.0.0.1:19088` and verifies:
-- console auth shell rendering
-- Google-disabled fallback state
-- demo fallback login
-- workspace auto-load
-- create monitor from a rule template
-- create webhook destination and show configured routes
-- send a test webhook and show delivery history
-- alerts-to-replay flow
-- logout relock flow
-
-If Playwright browser downloads are blocked in your network, the suite is configured to use the locally installed Google Chrome channel.

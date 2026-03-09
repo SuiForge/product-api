@@ -1,0 +1,58 @@
+name: Bug report
+description: Report a product or integration bug in Sui Alert Ops.
+title: "bug: "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the bug and the user-facing impact.
+      placeholder: After wallet login, the console stayed locked and API key creation remained disabled.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - Auth
+        - Console
+        - Alert feed
+        - Monitor builder
+        - Webhook delivery
+        - Replay
+        - API keys
+        - Deployment
+        - Documentation
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open /console
+        2. Sign in with wallet
+        3. Create an API key
+        4. Observe the error
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include URL, browser, network, and whether upstreams are live or demo-backed.
+      placeholder: Public HTTPS demo on mainnet, Chrome 145, Google login enabled, Vertical Index still demo-backed.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      render: shell
