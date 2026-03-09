@@ -1,0 +1,15 @@
+.DS_Store
+
+node_modules/
+test-results/
+playwright-report/
+
+.env
+.env.local
+.env.production
+
+data/*.json
+
+*.log
+npm-debug.log*
+

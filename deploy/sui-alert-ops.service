@@ -1,0 +1,17 @@
+[Unit]
+Description=Sui Alert Ops public demo stack
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/opt/sui-alert-ops/product-api/deploy
+ExecStart=/usr/bin/docker compose --env-file ../.env.production -f docker-compose.public.yml up -d --build
+ExecStop=/usr/bin/docker compose --env-file ../.env.production -f docker-compose.public.yml down
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target
+

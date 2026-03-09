@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sui Alert Ops</title>
+    <link rel="stylesheet" href="/console/styles.css" />
+    <script src="https://accounts.google.com/gsi/client" defer></script>
+    <script src="/console/wallet-auth.js"></script>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Sui alert ops</p>
+          <h1>Sui Alert Ops</h1>
+          <p class="lede">
+            Real-time alerting and incident response for Sui teams. Monitor critical activity,
+            route it to the right channel, and keep replayable evidence ready.
+          </p>
+        </div>
+        <div class="hero-status">
+          <span class="pill pill-live">alerts live</span>
+          <span class="pill">one service</span>
+          <span class="pill">grant-ready infra</span>
+        </div>
+      </header>
+
+      <section class="access-bar">
+        <article class="access-card">
+          <div class="panel-head access-head">
+            <div>
+              <p class="label">Demo Access</p>
+              <h2>Google or Wallet Login</h2>
+              <p class="subcopy">Use Google for fast operator access or connect a real Sui wallet to sign a server-issued challenge and enter a server-backed workspace session.</p>
+            </div>
+            <button id="workspace-logout" class="button button-secondary" type="button">Log Out</button>
+          </div>
+          <form id="workspace-login-form" class="access-form">
+            <input name="workspaceName" value="Alpha Desk" placeholder="Workspace name" />
+            <input name="operatorName" value="Founding PM" placeholder="Operator name" />
+            <input name="walletAddress" value="" placeholder="Connected wallet address or paste one for demo fallback" />
+            <mysten-dapp-kit-connect-button id="wallet-connect-button">Connect Sui Wallet</mysten-dapp-kit-connect-button>
+            <button class="button" type="submit">Sign In With Wallet</button>
+            <button id="workspace-demo-login" class="button button-secondary" type="button">Demo Fallback</button>
+          </form>
+          <div class="google-access-strip">
+            <span id="google-connection-badge" class="pill-badge google-state">Google login unavailable</span>
+            <div id="google-signin-button" class="google-signin-slot"></div>
+            <span id="google-connection-copy" class="subcopy google-copy">Configure Google Sign-In to enable popup login for non-wallet operators.</span>
+          </div>
+          <div class="wallet-access-strip">
+            <span id="wallet-connection-badge" class="pill-badge wallet-state">Wallet disconnected</span>
+            <span id="wallet-connection-copy" class="subcopy wallet-copy">Connect a Sui wallet first, then sign the login challenge.</span>
+          </div>
+          <pre id="workspace-session-result" class="terminal">No active workspace session.</pre>
+        </article>
+      </section>
+
+      <div id="console-app" class="console-app is-locked">
+      <section class="onboarding">
+        <div class="panel-head onboarding-head">
+          <div>
+            <p class="label">Alert Ops Flow</p>
+            <h2>Guide a new team to first operational value</h2>
+            <p class="subcopy">
+              Complete these steps to show live alert visibility, delivery, and evidence replay.
+            </p>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-track"><span id="demo-progress-bar" class="progress-bar"></span></div>
+            <strong id="demo-progress-label">0 / 6 completed</strong>
+          </div>
+        </div>
+
+        <div class="demo-steps">
+          <article class="step-card" id="step-workspace-card">
+            <span class="step-kicker">Step 1</span>
+            <h3>Inspect Overview</h3>
+            <p>Load workspace, request volume, and alert count from the unified alert ops overview.</p>
+            <div class="step-meta">
+              <span id="step-workspace-status" class="step-status pending">Pending</span>
+              <button id="demo-check-workspace" class="button button-secondary" type="button">Load Overview</button>
+            </div>
+          </article>
+
+          <article class="step-card" id="step-apikey-card">
+            <span class="step-kicker">Step 2</span>
+            <h3>Issue API Key</h3>
+            <p>Generate a wallet-bound API key so the product can move from console demo to real integration.</p>
+            <div class="step-meta">
+              <span id="step-apikey-status" class="step-status pending">Pending</span>
+              <button id="demo-go-apikey" class="button button-secondary" type="button">Open API Keys</button>
+            </div>
+          </article>
+
+          <article class="step-card" id="step-monitors-card">
+            <span class="step-kicker">Step 3</span>
+            <h3>Create Monitor</h3>
+            <p>Choose a rule template and bind it to a wallet, pool, or protocol target.</p>
+            <div class="step-meta">
+              <span id="step-monitors-status" class="step-status pending">Pending</span>
+              <button id="demo-go-monitors" class="button button-secondary" type="button">Open Builder</button>
+            </div>
+          </article>
+
+          <article class="step-card" id="step-alerts-card">
+            <span class="step-kicker">Step 4</span>
+            <h3>Review Alerts</h3>
+            <p>Inspect live alerts, severity, and evidence source to show the feed is actionable.</p>
+            <div class="step-meta">
+              <span id="step-alerts-status" class="step-status pending">Pending</span>
+              <button id="demo-go-alerts" class="button button-secondary" type="button">Review Alerts</button>
+            </div>
+          </article>
+
+          <article class="step-card" id="step-webhook-card">
+            <span class="step-kicker">Step 5</span>
+            <h3>Configure Webhook</h3>
+            <p>Push the user toward alert routing so the product feels operational, not analytical.</p>
+            <div class="step-meta">
+              <span id="step-webhook-status" class="step-status pending">Pending</span>
+              <button id="demo-go-webhook" class="button button-secondary" type="button">Configure Webhook</button>
+            </div>
+          </article>
+
+          <article class="step-card" id="step-replay-card">
+            <span class="step-kicker">Step 6</span>
+            <h3>Open Replay</h3>
+            <p>Load replay from a selected alert so the team can explain the evidence trail immediately.</p>
+            <div class="step-meta">
+              <span id="step-replay-status" class="step-status pending">Pending</span>
+              <button id="demo-go-replay" class="button button-secondary" type="button">Open Replay</button>
+            </div>
+          </article>
+        </div>
+
+        <div class="demo-outputs">
+          <pre id="demo-log" class="terminal">Alert ops flow ready. Start with overview.</pre>
+          <pre id="demo-flow-result" class="terminal">Alert ops walkthrough state will appear here.</pre>
+        </div>
+      </section>
+
+      <main class="grid">
+        <section class="panel panel-workspace" id="workspace-panel">
+          <div class="panel-head">
+            <div>
+              <p class="label">Service Overview</p>
+              <h2>Alert ops snapshot</h2>
+            </div>
+            <button id="workspace-refresh" class="button button-secondary">Refresh</button>
+          </div>
+          <div class="stats">
+            <article>
+              <span>Project</span>
+              <strong id="workspace-project">Waiting for data</strong>
+            </article>
+            <article>
+              <span>Plan</span>
+              <strong id="workspace-plan">-</strong>
+            </article>
+            <article>
+              <span>Requests</span>
+              <strong id="workspace-requests">-</strong>
+            </article>
+            <article>
+              <span>Alerts</span>
+              <strong id="workspace-alerts">-</strong>
+            </article>
+          </div>
+          <pre id="workspace-log" class="terminal">Open the service overview to inspect workspace, request load, and alert volume.</pre>
+        </section>
+
+        <section class="panel panel-readiness" id="readiness-panel">
+          <div class="panel-head">
+            <div>
+              <p class="label">Go-Live Readiness</p>
+              <h2>What is ready for pilots right now</h2>
+            </div>
+          </div>
+          <div class="split-view">
+            <section class="data-card">
+              <div class="data-card-head">
+                <div>
+                  <p class="label">Current Status</p>
+                  <h3>Deployment posture</h3>
+                </div>
+                <span id="readiness-status" class="pill-badge">Checking...</span>
+              </div>
+              <pre id="readiness-summary" class="terminal terminal-compact">Loading readiness status...</pre>
+              <div class="data-card-head monitor-list-head">
+                <div>
+                  <p class="label">Auth & Access</p>
+                  <h3>Operator entry points</h3>
+                </div>
+              </div>
+              <div id="readiness-auth-grid" class="key-value-grid">
+                <div><span>Google</span><strong>-</strong></div>
+                <div><span>Wallet</span><strong>-</strong></div>
+                <div><span>API Key</span><strong>-</strong></div>
+                <div><span>Network</span><strong>-</strong></div>
+              </div>
+            </section>
+
+            <section class="data-card">
+              <div class="data-card-head">
+                <div>
+                  <p class="label">Infrastructure</p>
+                  <h3>Runtime dependencies</h3>
+                </div>
+              </div>
+              <div id="readiness-infra-grid" class="key-value-grid">
+                <div><span>Public Origin</span><strong>-</strong></div>
+                <div><span>Persistence</span><strong>-</strong></div>
+                <div><span>DeepBook</span><strong>-</strong></div>
+                <div><span>Vertical Index</span><strong>-</strong></div>
+              </div>
+              <div class="data-card-head monitor-list-head">
+                <div>
+                  <p class="label">Next Actions</p>
+                  <h3>Fastest path to sell or apply</h3>
+                </div>
+              </div>
+              <div id="readiness-next-actions" class="alert-feed">
+                <div class="alert-item empty-state">Readiness actions will appear here.</div>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="panel panel-keys" id="apikey-panel">
+          <div class="panel-head">
+            <div>
+              <p class="label">API Keys</p>
+              <h2>Issue integration credentials</h2>
+            </div>
+          </div>
+          <div class="split-view">
+            <section class="data-card">
+              <div class="data-card-head">
+                <div>
+                  <p class="label">Create API Key</p>
+                  <h3>Wallet-bound operator access</h3>
+                </div>
+                <span class="microcopy">Generate a real credential, then use the preview for buyer or grant demos.</span>
+              </div>
+              <form id="demo-key-form" class="stack-form">
+                <input name="name" value="ops-agent" placeholder="API key name" />
+                <button class="button" type="submit">Issue API Key</button>
+              </form>
+              <pre id="demo-key-result" class="terminal terminal-compact">Create an API key to unlock a real integration handoff.</pre>
+            </section>
+
+            <section class="data-card">
+              <div class="data-card-head">
+                <div>
+                  <p class="label">Issued Keys</p>
+                  <h3>Saved integration previews</h3>
+                </div>
+                <span id="api-key-list-meta" class="microcopy">No API keys issued yet.</span>
+              </div>
+              <div id="api-key-list" class="alert-feed">
+                <div class="alert-item empty-state">Generate an API key to see wallet-bound credentials listed here.</div>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="panel panel-monitors" id="monitors-panel">
+          <div class="panel-head">
+            <div>
+              <p class="label">Monitor Builder</p>
+              <h2>Monitor Builder</h2>
+            </div>
+          </div>
+          <div class="split-view">
+            <section class="data-card">
+              <div class="data-card-head">
+                <div>
+                  <p class="label">Create Monitor</p>
+                  <h3>Rule-driven watch setup</h3>
+                </div>
+                <span class="microcopy">Bind a target to a reusable alert template.</span>
+              </div>
+              <form id="monitor-form" class="form-grid">
+                <input id="monitor-name" name="name" value="Treasury Watch" placeholder="Monitor name" />
+                <select id="monitor-target-type" name="targetType">
+                  <option value="wallet">Wallet</option>
+                  <option value="pool">Pool</option>
+                  <option value="protocol">Protocol</option>
+                </select>
+                <input id="monitor-target-value" name="targetValue" placeholder="Wallet, pool, or protocol target" />
+                <select id="monitor-rule-template" name="ruleTemplateId">
+                  <option value="">Loading templates...</option>
+                </select>
+                <select id="monitor-severity" name="severity">
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+                <button class="button" type="submit">Create Monitor</button>
+              </form>
+              <pre id="monitors-result" class="terminal terminal-compact">Create a monitor to start a repeatable alerting workflow.</pre>
+            </section>
+
+            <section class="data-card">
+              <div class="data-card-head">
+                <div>
+                  <p class="label">Rule Templates</p>
+                  <h3>Starter alert patterns</h3>
+                </div>
+                <span id="rule-templates-meta" class="microcopy">Loading templates...</span>
+              </div>
+              <div id="rule-templates-strip" class="pill-row">
+                <span class="pill-badge">Loading templates</span>
+              </div>
+              <div class="data-card-head monitor-list-head">
+                <div>
+                  <p class="label">Monitors</p>
+                  <h3>Active coverage</h3>
+                </div>
+                <span id="monitor-list-meta" class="microcopy">No monitors loaded.</span>
+              </div>
+              <div id="monitor-list" class="alert-feed">
+                <div class="alert-item empty-state">Load or create a monitor to see active coverage.</div>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="panel panel-risk" id="risk-panel">
+          <div class="panel-head">
+            <div>
+              <p class="label">Risk Check</p>
+              <h2>Pre-trade decision gate</h2>
+            </div>
+          </div>
+          <form id="risk-form" class="form-grid">
+            <input name="projectId" value="proj_1" placeholder="Project ID" />
+            <input name="strategyId" value="scalp-1" placeholder="Strategy ID" />
+            <input name="symbol" value="SUI/USDC" placeholder="Symbol" />
+            <select name="side">
+              <option value="buy">Buy</option>
+              <option value="sell">Sell</option>
+            </select>
+            <input name="price" value="1.23" placeholder="Price" />
+            <input name="size" value="100" placeholder="Size" />
+            <button class="button" type="submit">Run Risk Check</button>
+          </form>
+          <pre id="risk-result" class="terminal">Decision output will appear here.</pre>
+        </section>
+
+        <section class="panel panel-replay" id="replay-panel">
+          <div class="panel-head">
+            <div>
+              <p class="label">Replay</p>
+              <h2>Evidence-based explanation</h2>
+            </div>
+          </div>
+          <form id="replay-form" class="inline-form replay-form">
+            <input id="replay-evidence-id" name="evidenceId" placeholder="evidenceId" />
+            <button class="button button-secondary" type="submit">Load Replay</button>
+          </form>
+          <div id="replay-detail-card" class="data-card">
+            <div class="data-card-head">
+              <div>
+                <p class="label">Decision Replay</p>
+                <h3>Why the engine said no</h3>
+              </div>
+              <span id="replay-meta" class="microcopy">Load an evidence record to inspect the decision path.</span>
+            </div>
+            <div class="mini-stats replay-strip">
+              <article>
+                <span>Decision</span>
+                <strong id="replay-decision">-</strong>
+              </article>
+              <article>
+                <span>Risk Score</span>
+                <strong id="replay-score">-</strong>
+              </article>
+              <article>
+                <span>Evidence</span>
+                <strong id="replay-evidence-link">-</strong>
+              </article>
+              <article>
+                <span>Status</span>
+                <strong id="replay-status">Ready</strong>
+              </article>
+            </div>
+            <div>
+              <p class="label">Reason Codes</p>
+              <div id="replay-reasons" class="pill-row">
+                <span class="pill-badge">Awaiting replay</span>
+              </div>
+            </div>
+            <pre id="replay-result" class="terminal terminal-compact">Load an evidence record to replay the decision.</pre>
+          </div>
+        </section>
+
+        <section class="panel panel-execution" id="execution-panel">
+          <div class="panel-head">
+            <div>
+              <p class="label">Execution Lens</p>
+              <h2>Pool execution summary</h2>
+            </div>
+          </div>
+          <form id="execution-form" class="inline-form compact">
+            <input name="poolId" value="0xe05dafb5133bcffb8d59f4e12465dc0e9faeaa05e3e342a08fe135800e3e4407" placeholder="Pool ID" />
+            <input name="symbol" value="SUI/USDC" placeholder="Symbol" />
+            <select name="window">
+              <option value="1h">1h</option>
+              <option value="24h">24h</option>
+            </select>
+            <select name="eventType">
+              <option value="">All lifecycle events</option>
+              <option value="order_placed">order_placed</option>
+              <option value="order_modified">order_modified</option>
+              <option value="order_canceled">order_canceled</option>
+            </select>
+            <button class="button button-secondary" type="submit">Load Summary</button>
+          </form>
+          <div class="data-view">
+            <div id="execution-summary-strip" class="mini-stats">
+              <article>
+                <span>Trades</span>
+                <strong id="execution-trades">-</strong>
+              </article>
+              <article>
+                <span>Quote Volume</span>
+                <strong id="execution-volume">-</strong>
+              </article>
+              <article>
+                <span>Execution Score</span>
+                <strong id="execution-score">-</strong>
+              </article>
+              <article>
+                <span>Window</span>
+                <strong id="execution-window">-</strong>
+              </article>
+            </div>
+
+            <div class="split-view">
+              <section class="data-card">
+                <div class="data-card-head">
+                  <div>
+                    <p class="label">Recent Fills</p>
+                    <h3>Latest execution prints</h3>
+                  </div>
+                  <span id="execution-fills-meta" class="microcopy">No fills loaded.</span>
+                </div>
+                <div class="table-shell">
+                  <table id="execution-fills-table" class="data-table">
+                    <thead>
+                      <tr>
+                        <th>Tx</th>
+                        <th>Seq</th>
+                        <th>Price</th>
+                        <th>Quote Size</th>
+                      </tr>
+                    </thead>
+                    <tbody id="execution-fills-body">
+                      <tr>
+                        <td colspan="4" class="table-empty">Load execution to inspect recent fills.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
+              <section class="data-card">
+                <div class="data-card-head">
+                  <div>
+                    <p class="label">Lifecycle</p>
+                    <h3>Order flow events</h3>
+                  </div>
+                  <span id="execution-lifecycle-meta" class="microcopy">No lifecycle events loaded.</span>
+                </div>
+                <div class="table-shell">
+                  <table id="execution-lifecycle-table" class="data-table">
+                    <thead>
+                      <tr>
+                        <th>Type</th>
+                        <th>Tx</th>
+                        <th>Seq</th>
+                      </tr>
+                    </thead>
+                    <tbody id="execution-lifecycle-body">
+                      <tr>
+                        <td colspan="3" class="table-empty">Load execution to inspect lifecycle events.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            </div>
+
+            <pre id="execution-result" class="terminal terminal-compact">Execution summary and score will render here.</pre>
+          </div>
+        </section>
+
+        <section class="panel panel-alerts" id="alerts-panel">
+          <div class="panel-head">
+            <div>
+              <p class="label">Alerts</p>
+              <h2>Signal routing and anomaly feed</h2>
+            </div>
+            <button id="alerts-refresh" class="button button-secondary">Refresh</button>
+          </div>
+          <div id="alerts-summary-strip" class="mini-stats mini-stats-alerts">
+            <article>
+              <span>Total Alerts</span>
+              <strong id="alerts-total">-</strong>
+            </article>
+            <article>
+              <span>High Severity</span>
+              <strong id="alerts-high">-</strong>
+            </article>
+            <article>
+              <span>Medium Severity</span>
+              <strong id="alerts-medium">-</strong>
+            </article>
+            <article>
+              <span>Latest Signal</span>
+              <strong id="alerts-latest">-</strong>
+            </article>
+          </div>
+          <div class="alert-layout">
+            <div class="data-card">
+              <div class="data-card-head">
+                <div>
+                  <p class="label">Live Feed</p>
+                  <h3>Recent routed anomalies</h3>
+                </div>
+                <span id="alerts-feed-meta" class="microcopy">No alerts loaded.</span>
+              </div>
+              <div id="alerts-feed" class="alert-feed">
+                <div class="alert-item empty-state">Alert feed will appear here.</div>
+              </div>
+              <section id="alerts-detail-card" class="detail-card">
+                <div class="data-card-head">
+                  <div>
+                    <p class="label">Selected Alert</p>
+                    <h3>Routing detail</h3>
+                  </div>
+                  <span id="alerts-detail-meta" class="microcopy">Select an alert to inspect routing evidence.</span>
+                </div>
+                <div id="alerts-detail-grid" class="key-value-grid">
+                  <div>
+                    <span>Severity</span>
+                    <strong>-</strong>
+                  </div>
+                  <div>
+                    <span>Evidence</span>
+                    <strong>-</strong>
+                  </div>
+                  <div>
+                    <span>Timestamp</span>
+                    <strong>-</strong>
+                  </div>
+                  <div>
+                    <span>Source</span>
+                    <strong>-</strong>
+                  </div>
+                </div>
+              </section>
+              <pre id="alerts-result" class="terminal terminal-compact">Alert sync status will appear here.</pre>
+            </div>
+            <section class="data-card">
+              <div class="data-card-head">
+                <div>
+                  <p class="label">Destinations</p>
+                  <h3>Configured routes</h3>
+                </div>
+                <span id="destination-list-meta" class="microcopy">No webhook routes loaded.</span>
+              </div>
+              <form id="destination-form" class="stack-form">
+                <input name="projectId" value="proj_1" placeholder="Project ID" />
+                <input name="target" value="https://example.com/hook" placeholder="Webhook target" />
+                <input name="type" value="webhook" placeholder="Destination type" />
+                <button class="button" type="submit">Create Destination</button>
+              </form>
+              <button id="destination-test" class="button button-secondary" type="button">Send Test Webhook</button>
+              <div id="destination-list" class="alert-feed">
+                <div class="alert-item empty-state">Create a destination to see configured webhook routes.</div>
+              </div>
+              <div class="data-card-head monitor-list-head">
+                <div>
+                  <p class="label">Delivery History</p>
+                  <h3>Recent webhook attempts</h3>
+                </div>
+                <span id="delivery-list-meta" class="microcopy">No delivery attempts yet.</span>
+              </div>
+              <div id="delivery-list" class="alert-feed">
+                <div class="alert-item empty-state">Send a test webhook to build delivery history.</div>
+              </div>
+            </section>
+          </div>
+          <pre id="destination-result" class="terminal">Webhook registration result will appear here.</pre>
+        </section>
+      </main>
+
+      <section id="conversion-cta" class="conversion-cta">
+        <div>
+          <p class="label">Activation Path</p>
+          <h2>Turn this demo into a pilot or grant pitch</h2>
+          <p class="subcopy">
+            The buyer has now seen live execution, live alerts, and a replayable decision trace. Use the next actions below to move from demo to paid pilot or Sui ecosystem narrative.
+          </p>
+        </div>
+        <div id="pitch-mode-toggle" class="mode-toggle">
+          <button class="toggle-button is-active" data-conversion-mode="buyer" type="button">Buyer Mode</button>
+          <button class="toggle-button" data-conversion-mode="grant" type="button">Grant Mode</button>
+        </div>
+        <section class="data-card pitch-card">
+          <div class="data-card-head">
+            <div>
+              <p id="pitch-mode-label" class="label">Buyer Narrative</p>
+              <h3 id="pitch-headline">Use live execution and alerts as the operator wedge</h3>
+            </div>
+            <button id="copy-pitch-summary" class="button button-secondary" type="button">Copy Summary</button>
+          </div>
+          <div class="mini-stats pitch-stats">
+            <article>
+              <span>Alerts</span>
+              <strong id="pitch-alert-count">-</strong>
+            </article>
+            <article>
+              <span>Trades</span>
+              <strong id="pitch-trade-count">-</strong>
+            </article>
+            <article>
+              <span>Execution Score</span>
+              <strong id="pitch-execution-score">-</strong>
+            </article>
+            <article>
+              <span>Decision</span>
+              <strong id="pitch-decision">-</strong>
+            </article>
+          </div>
+          <pre id="pitch-summary" class="terminal terminal-compact">Load the workspace to generate a live pitch summary.</pre>
+        </section>
+        <section class="data-card grant-card">
+          <div class="data-card-head">
+            <div>
+              <p class="label">Grant Pack</p>
+              <h3>Generate a Sui grant-ready one-pager</h3>
+            </div>
+            <button id="copy-grant-onepager" class="button button-secondary" type="button">Copy One-Pager</button>
+          </div>
+          <div id="conversion-freshness-strip" class="mini-stats conversion-freshness-strip">
+            <article>
+              <span>Execution Synced</span>
+              <strong id="freshness-execution-synced">Awaiting load</strong>
+            </article>
+            <article>
+              <span>Alerts Latest</span>
+              <strong id="freshness-alerts-latest">Awaiting alerts</strong>
+            </article>
+            <article>
+              <span>Replay Status</span>
+              <strong id="freshness-replay-status">Awaiting replay</strong>
+            </article>
+            <article>
+              <span>API Preview</span>
+              <strong id="freshness-api-preview">Generate key preview</strong>
+            </article>
+          </div>
+          <pre id="grant-onepager" class="terminal grant-onepager">Load the workspace to generate a Sui grant one-pager.</pre>
+        </section>
+        <div class="conversion-grid">
+          <article class="cta-card">
+            <span class="pill-badge high">Pilot</span>
+            <h3>Sell a 2-week operator pilot</h3>
+            <p>Lead with live alerts, execution replay, and webhook routing as the operational wedge.</p>
+          </article>
+          <article class="cta-card">
+            <span class="pill-badge order_modified">Grant</span>
+            <h3>Frame it as Sui infra UX</h3>
+            <p>Position the product as a usable execution intelligence layer built on top of Sui-native telemetry.</p>
+          </article>
+          <article class="cta-card">
+            <span class="pill-badge medium">Close</span>
+            <h3>Give the buyer a next step</h3>
+            <p>Use API key preview, replay evidence, and alert routing to drive the conversion conversation immediately.</p>
+          </article>
+        </div>
+        <div class="cta-actions">
+          <button id="cta-open-workspace" class="button button-secondary" type="button">Review Workspace</button>
+          <button id="cta-open-replay" class="button button-secondary" type="button">Open Replay</button>
+          <button id="cta-open-alerts" class="button" type="button">Inspect Live Alerts</button>
+        </div>
+      </section>
+      </div>
+    </div>
+
+    <script src="/console/app.js"></script>
+  </body>
+</html>
