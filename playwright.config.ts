@@ -2,6 +2,7 @@ import { defineConfig } from '@playwright/test';
 
 const port = 19088;
 const baseURL = `http://127.0.0.1:${port}`;
+const browserChannel = process.env.PLAYWRIGHT_BROWSER_CHANNEL ?? (process.env.CI ? undefined : 'chrome');
 
 export default defineConfig({
 	testDir: './tests/e2e',
@@ -14,7 +15,8 @@ export default defineConfig({
 	retries: 0,
 	use: {
 		baseURL,
-		channel: 'chrome',
+		browserName: 'chromium',
+		...(browserChannel ? { channel: browserChannel } : {}),
 		headless: true,
 		trace: 'on-first-retry',
 	},
