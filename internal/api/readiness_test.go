@@ -74,6 +74,15 @@ func TestReadinessRouteReturnsGoLiveStatus(t *testing.T) {
 	if infrastructure["publicOrigin"] != "https://alertops.example.com" {
 		t.Fatalf("expected publicOrigin in payload, got %+v", infrastructure)
 	}
+	if infrastructure["executionEmbedded"] != true || infrastructure["alertingEmbedded"] != true {
+		t.Fatalf("expected embedded infrastructure flags, got %+v", infrastructure)
+	}
+	if _, exists := infrastructure["deepBookConnected"]; exists {
+		t.Fatalf("expected legacy deepBookConnected field removed, got %+v", infrastructure)
+	}
+	if _, exists := infrastructure["verticalIndexConnected"]; exists {
+		t.Fatalf("expected legacy verticalIndexConnected field removed, got %+v", infrastructure)
+	}
 	nextActions, _ := payload["nextActions"].([]any)
 	if len(nextActions) == 0 {
 		t.Fatalf("expected nextActions, got %+v", payload)
@@ -113,8 +122,8 @@ func TestReadinessRouteReturnsProductionReadyWithoutExternalServiceDependencies(
 	nextActions, _ := payload["nextActions"].([]any)
 	for _, item := range nextActions {
 		text, _ := item.(string)
-		if strings.Contains(text, "DEEPBOOK_API_BASE_URL") || strings.Contains(text, "VERTICAL_INDEX_API_BASE_URL") {
-			t.Fatalf("expected no external-service next actions, got %+v", nextActions)
+		if strings.Contains(text, "BASE_URL") {
+			t.Fatalf("expected no legacy dependency next actions, got %+v", nextActions)
 		}
 	}
 }

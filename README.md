@@ -143,7 +143,7 @@ Session and identity configuration:
 - `PRODUCT_API_GOOGLE_HOSTED_DOMAIN`
 - `PRODUCT_API_DATA_FILE`
 
-No other backend service is required for the current product surface. Public rollout now depends on auth, persistence, and deployment posture rather than separate upstream services.
+No other backend service is required for the current product surface. Public rollout now depends on auth, persistence, and deployment posture rather than separate backing services.
 
 ## Key routes
 

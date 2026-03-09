@@ -485,8 +485,8 @@ function renderReadinessView(result) {
     `
       <div><span>Public Origin</span><strong>${escapeHTML(result?.infrastructure?.publicOrigin || '-')}</strong></div>
       <div><span>Persistence</span><strong>${escapeHTML(result?.infrastructure?.persistentStateEnabled ? 'enabled' : 'not ready')}</strong></div>
-      <div><span>Execution Engine</span><strong>${escapeHTML(result?.infrastructure?.deepBookConnected ? 'embedded' : 'not ready')}</strong></div>
-      <div><span>Alerting Core</span><strong>${escapeHTML(result?.infrastructure?.verticalIndexConnected ? 'embedded' : 'not ready')}</strong></div>
+      <div><span>Execution Engine</span><strong>${escapeHTML(result?.infrastructure?.executionEmbedded ? 'embedded' : 'not ready')}</strong></div>
+      <div><span>Alerting Core</span><strong>${escapeHTML(result?.infrastructure?.alertingEmbedded ? 'embedded' : 'not ready')}</strong></div>
     `,
   );
   const nextActions = result?.nextActions || [];

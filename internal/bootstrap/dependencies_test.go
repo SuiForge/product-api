@@ -235,17 +235,13 @@ func TestBuildDependenciesPersistsAPIKeysAndValidatesThemWhenDataFileConfigured(
 	}
 }
 
-func TestBuildDependenciesUsesInternalProvidersEvenWhenLegacyUpstreamEnvConfigured(t *testing.T) {
+func TestBuildDependenciesUsesInternalProvidersWithSingleServiceArchitecture(t *testing.T) {
 	t.Parallel()
 
 	cfg := config.Config{
-		SessionSecret:           "test-session-secret",
-		PublicOrigin:            "https://alertops.example.com",
-		DataFile:                filepath.Join(t.TempDir(), "state.json"),
-		DeepBookAPIBaseURL:      "http://127.0.0.1:1",
-		DeepBookAPIToken:        "legacy-token",
-		VerticalIndexAPIBaseURL: "http://127.0.0.1:1",
-		VerticalIndexAPIKey:     "legacy-key",
+		SessionSecret: "test-session-secret",
+		PublicOrigin:  "https://alertops.example.com",
+		DataFile:      filepath.Join(t.TempDir(), "state.json"),
 	}
 	deps := bootstrap.BuildDependencies(cfg)
 	router := api.NewRouter(cfg, deps)

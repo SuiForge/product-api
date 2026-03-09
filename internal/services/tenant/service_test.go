@@ -89,6 +89,6 @@ func TestServiceReturnsConflictWhenWalletAlreadyHasAPIKey(t *testing.T) {
 	ctx := identity.WithContext(context.Background(), &identity.Identity{WalletAddress: "0x1111111111111111111111111111111111111111111111111111111111111111", WorkspaceName: "Alpha", OperatorName: "Founding PM", AuthMethod: "session"})
 	_, err := service.CreateAPIKey(ctx, domain.CreateAPIKeyRequest{Name: "default"})
 	if err == nil || !strings.Contains(err.Error(), "already exists") {
-		t.Fatalf("expected upstream create failure, got %v", err)
+		t.Fatalf("expected provider create failure, got %v", err)
 	}
 }

@@ -26,8 +26,8 @@ type readinessInfrastructure struct {
 	PublicOrigin           string `json:"publicOrigin,omitempty"`
 	PersistentStateEnabled bool   `json:"persistentStateEnabled"`
 	DataFile               string `json:"dataFile,omitempty"`
-	DeepBookConnected      bool   `json:"deepBookConnected"`
-	VerticalIndexConnected bool   `json:"verticalIndexConnected"`
+	ExecutionEmbedded      bool   `json:"executionEmbedded"`
+	AlertingEmbedded       bool   `json:"alertingEmbedded"`
 }
 
 type readinessResponse struct {
@@ -51,12 +51,12 @@ func buildReadinessResponse(cfg config.Config, deps Dependencies) readinessRespo
 	walletEnabled := deps.WalletVerifier != nil && strings.TrimSpace(cfg.PublicOrigin) != ""
 	apiKeyValidationReady := deps.IdentityService != nil
 	persistentStateEnabled := strings.TrimSpace(cfg.DataFile) != ""
-	embeddedExecutionReady := true
-	embeddedAlertsReady := true
+	executionEmbedded := true
+	alertingEmbedded := true
 
 	status := "setup_required"
 	summary := "Core auth or persistence configuration is still missing."
-	if walletEnabled && apiKeyValidationReady && persistentStateEnabled && embeddedExecutionReady && embeddedAlertsReady {
+	if walletEnabled && apiKeyValidationReady && persistentStateEnabled && executionEmbedded && alertingEmbedded {
 		status = "pilot_ready"
 		summary = "Core wallet auth, API key validation, persistent state, and embedded product capabilities are ready for demos and paid pilots."
 	}
@@ -78,7 +78,7 @@ func buildReadinessResponse(cfg config.Config, deps Dependencies) readinessRespo
 	if !persistentStateEnabled {
 		nextActions = append(nextActions, "Set PRODUCT_API_DATA_FILE so monitors, deliveries, and API keys persist across restarts.")
 	}
-	if !embeddedExecutionReady || !embeddedAlertsReady {
+	if !executionEmbedded || !alertingEmbedded {
 		nextActions = append(nextActions, "Keep the embedded execution, alerting, and tenant capabilities enabled inside product-api.")
 	}
 	if len(nextActions) == 0 {
@@ -104,8 +104,8 @@ func buildReadinessResponse(cfg config.Config, deps Dependencies) readinessRespo
 			PublicOrigin:           strings.TrimSpace(cfg.PublicOrigin),
 			PersistentStateEnabled: persistentStateEnabled,
 			DataFile:               strings.TrimSpace(cfg.DataFile),
-			DeepBookConnected:      embeddedExecutionReady,
-			VerticalIndexConnected: embeddedAlertsReady,
+			ExecutionEmbedded:      executionEmbedded,
+			AlertingEmbedded:       alertingEmbedded,
 		},
 		NextActions: nextActions,
 	}

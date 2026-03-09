@@ -37,7 +37,7 @@
 - Route HTTPS through Caddy.
 
 **Step 2: Add reverse proxy config**
-- Make the Caddyfile use environment substitution for domain and upstream.
+- Make the Caddyfile use environment substitution for domain and single-service runtime settings.
 - Proxy all traffic to the app and set safe HTTP headers.
 
 **Step 3: Add systemd example**
@@ -51,7 +51,7 @@
 - Modify: `product-api/README.md`
 
 **Step 1: Add production env template**
-- Include session, public origin, Google auth, persistence, and upstream placeholders.
+- Include session, public origin, Google auth, and persistence placeholders.
 
 **Step 2: Document deployment flow**
 - Explain how to copy the env template, launch the compose stack, and verify readiness.
