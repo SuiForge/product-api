@@ -47,8 +47,8 @@ print_status "Public origin" "${PRODUCT_API_PUBLIC_ORIGIN:-<missing>}"
 print_status "Persistent state" "${PRODUCT_API_DATA_FILE:-<missing>}"
 print_status "Google client" "${PRODUCT_API_GOOGLE_CLIENT_ID:+configured}${PRODUCT_API_GOOGLE_CLIENT_ID:-not configured}"
 print_status "Google domain" "${PRODUCT_API_GOOGLE_HOSTED_DOMAIN:-not configured}"
-print_status "DeepBook upstream" "${DEEPBOOK_API_BASE_URL:+configured}${DEEPBOOK_API_BASE_URL:-demo mode}"
-print_status "Vertical Index" "${VERTICAL_INDEX_API_BASE_URL:+configured}${VERTICAL_INDEX_API_BASE_URL:-demo mode}"
+print_status "Execution engine" "embedded"
+print_status "Alerting core" "embedded"
 
 if [[ "${PRODUCT_API_SESSION_COOKIE_SECURE:-}" != "true" ]]; then
   echo "warning: PRODUCT_API_SESSION_COOKIE_SECURE should be true for public HTTPS deployments"

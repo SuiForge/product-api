@@ -234,3 +234,35 @@ func TestBuildDependenciesPersistsAPIKeysAndValidatesThemWhenDataFileConfigured(
 		t.Fatalf("expected api_key auth method in response, got %s", validateRec.Body.String())
 	}
 }
+
+func TestBuildDependenciesUsesInternalProvidersEvenWhenLegacyUpstreamEnvConfigured(t *testing.T) {
+	t.Parallel()
+
+	cfg := config.Config{
+		SessionSecret:           "test-session-secret",
+		PublicOrigin:            "https://alertops.example.com",
+		DataFile:                filepath.Join(t.TempDir(), "state.json"),
+		DeepBookAPIBaseURL:      "http://127.0.0.1:1",
+		DeepBookAPIToken:        "legacy-token",
+		VerticalIndexAPIBaseURL: "http://127.0.0.1:1",
+		VerticalIndexAPIKey:     "legacy-key",
+	}
+	deps := bootstrap.BuildDependencies(cfg)
+	router := api.NewRouter(cfg, deps)
+	authCookie := loginCookie(t, router)
+
+	cases := []string{
+		"/v1/projects/me",
+		"/v1/alerts",
+		"/v1/execution/summaries?poolId=pool-1&symbol=SUI/USDC&window=1h",
+	}
+	for _, path := range cases {
+		req := httptest.NewRequest(http.MethodGet, path, nil)
+		req.AddCookie(authCookie)
+		rec := httptest.NewRecorder()
+		router.ServeHTTP(rec, req)
+		if rec.Code != http.StatusOK {
+			t.Fatalf("%s: expected internal provider response 200, got %d body=%s", path, rec.Code, rec.Body.String())
+		}
+	}
+}

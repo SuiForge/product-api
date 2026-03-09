@@ -8,6 +8,10 @@ import (
 //go:embed static/*
 var assets embed.FS
 
+func LandingHandler() http.HandlerFunc {
+	return assetHandler("landing.html", "text/html; charset=utf-8")
+}
+
 func IndexHandler() http.HandlerFunc {
 	return assetHandler("index.html", "text/html; charset=utf-8")
 }

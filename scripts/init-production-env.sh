@@ -53,7 +53,7 @@ echo
 echo "next:"
 echo "  1. fill PRODUCT_API_SESSION_SECRET"
 echo "  2. fill PRODUCT_API_GOOGLE_CLIENT_ID if using Google login"
-echo "  3. fill DEEPBOOK_API_BASE_URL / VERTICAL_INDEX_API_BASE_URL when ready"
+echo "  3. seed one monitor, one webhook destination, and one replayable alert before public demos"
 echo "  4. run ./scripts/check-production-env.sh"
 echo "  5. run ./scripts/deploy-public.sh"
 

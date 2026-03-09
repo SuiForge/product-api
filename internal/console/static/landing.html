@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sui Alert Ops</title>
+    <meta
+      name="description"
+      content="Wallet-native alerting for Sui teams with operator login, signed webhooks, API keys, and replayable incident evidence."
+    />
+    <link rel="stylesheet" href="/console/styles.css" />
+  </head>
+  <body>
+    <main class="landing-shell">
+      <section class="landing-hero-card">
+        <div class="landing-topbar">
+          <div class="landing-brand">
+            <span class="landing-brand-mark">SO</span>
+            <div>
+              <p class="eyebrow">Sui Alert Ops</p>
+              <p class="landing-brand-copy">Operator-facing alerting product for Sui teams</p>
+            </div>
+          </div>
+          <div class="landing-topbar-actions">
+            <a class="landing-link" href="/v1/alert-ops/readiness">Go-Live Readiness</a>
+            <a class="landing-link" href="https://github.com/SuiForge/product-api">GitHub Repo</a>
+          </div>
+        </div>
+
+        <div class="landing-hero-grid">
+          <div class="landing-copy">
+            <p class="eyebrow">Buyer-ready product surface</p>
+            <h1>Wallet-native alerting for Sui teams</h1>
+            <p class="landing-lede">
+              Give operators one place to review alerts, issue API keys, route signed webhooks,
+              and replay evidence. Start with Google login for operators, then unlock wallet-bound
+              actions when deeper setup is needed.
+            </p>
+            <div class="landing-cta-row">
+              <a class="landing-button landing-button-primary" href="/console">Open Operator Console</a>
+              <a
+                class="landing-button landing-button-secondary"
+                href="https://github.com/SuiForge/product-api/issues/new?template=design_partner_pilot.yml"
+              >
+                Apply for Design Partner Pilot
+              </a>
+            </div>
+            <ul class="landing-proof-list">
+              <li>Google login for operators</li>
+              <li>Sui wallet login for wallet-bound actions</li>
+              <li>Webhook delivery with signed test sends</li>
+              <li>Replayable alert evidence</li>
+            </ul>
+          </div>
+
+          <aside class="landing-proof-panel">
+            <div class="landing-proof-metric">
+              <span class="landing-proof-kicker">Proof</span>
+              <strong>Go-Live Readiness</strong>
+              <p>Expose demo, pilot, or production posture from one endpoint.</p>
+            </div>
+            <div class="landing-proof-metric">
+              <span class="landing-proof-kicker">Access</span>
+              <strong>Google + wallet auth</strong>
+              <p>Let non-wallet operators enter fast without giving up wallet-native control.</p>
+            </div>
+            <div class="landing-proof-metric">
+              <span class="landing-proof-kicker">Operations</span>
+              <strong>API keys, webhooks, replay</strong>
+              <p>Show the exact operator loop buyers and grant reviewers need to trust.</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="landing-grid-3">
+        <article class="landing-panel-card">
+          <p class="eyebrow">What buyers see</p>
+          <h2>One operator workflow</h2>
+          <p>
+            Buyers do not need a tour of backend services. They need one surface that shows alerts,
+            delivery, and investigation. `Sui Alert Ops` keeps those actions inside one product flow.
+          </p>
+        </article>
+        <article class="landing-panel-card">
+          <p class="eyebrow">What grant reviewers see</p>
+          <h2>Verifiable product proof</h2>
+          <p>
+            A public console, a readiness endpoint, CI-backed validation, and a repeatable demo flow
+            make the product easy to evaluate without guessing what is real.
+          </p>
+        </article>
+        <article class="landing-panel-card">
+          <p class="eyebrow">What operators get</p>
+          <h2>Actionable alert ops</h2>
+          <p>
+            Create monitors, configure destinations, send signed test deliveries, and open replay
+            evidence from the same environment you plan to share externally.
+          </p>
+        </article>
+      </section>
+
+      <section class="landing-demo-strip">
+        <div class="landing-demo-card">
+          <p class="eyebrow">Recommended demo path</p>
+          <ol class="landing-demo-list">
+            <li>Open `/console` and sign in with Google or wallet</li>
+            <li>Show the `Go-Live Readiness` panel</li>
+            <li>Review alerts and overview</li>
+            <li>Create a webhook destination and send a signed test</li>
+            <li>Open one replayable alert and show API key issuance</li>
+          </ol>
+        </div>
+        <div class="landing-demo-card">
+          <p class="eyebrow">Deployment posture</p>
+          <ul class="landing-bullet-list">
+            <li>Public HTTPS deployment included with Docker + Caddy</li>
+            <li>Wallet login is tied to the public origin</li>
+            <li>Persistent state keeps monitors, deliveries, and keys</li>
+            <li>GitHub Actions validates backend, smoke, and browser flows</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

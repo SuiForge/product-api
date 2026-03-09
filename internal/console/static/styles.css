@@ -922,3 +922,253 @@ textarea:disabled {
 .conversion-cta {
   display: none;
 }
+
+.landing-shell {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 28px 24px 56px;
+}
+
+.landing-hero-card,
+.landing-panel-card,
+.landing-demo-card {
+  background: linear-gradient(180deg, rgba(14, 22, 35, 0.98), rgba(9, 16, 25, 0.98));
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  border-radius: 28px;
+}
+
+.landing-hero-card {
+  padding: 24px;
+  margin-bottom: 22px;
+}
+
+.landing-topbar,
+.landing-hero-grid,
+.landing-cta-row,
+.landing-proof-list,
+.landing-topbar-actions,
+.landing-demo-strip {
+  display: flex;
+}
+
+.landing-topbar {
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.landing-brand {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.landing-brand-mark {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--cyan), var(--lime));
+  color: #06111c;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.landing-brand-copy {
+  margin: 0;
+  color: var(--muted);
+}
+
+.landing-topbar-actions {
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.landing-link {
+  color: var(--text);
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.landing-link:hover,
+.landing-button:hover {
+  transform: translateY(-1px);
+}
+
+.landing-hero-grid {
+  gap: 24px;
+  align-items: stretch;
+}
+
+.landing-copy {
+  flex: 1.2;
+}
+
+.landing-copy h1 {
+  margin: 0;
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+  font-size: clamp(40px, 6vw, 76px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  max-width: 11ch;
+}
+
+.landing-lede,
+.landing-panel-card p,
+.landing-proof-metric p,
+.landing-demo-card li {
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+.landing-lede {
+  max-width: 62ch;
+  margin: 18px 0 0;
+}
+
+.landing-cta-row {
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 24px 0 18px;
+}
+
+.landing-button {
+  text-decoration: none;
+  border-radius: 16px;
+  padding: 14px 18px;
+  font-weight: 700;
+  transition: transform 140ms ease, opacity 140ms ease;
+}
+
+.landing-button-primary {
+  background: linear-gradient(135deg, var(--cyan), #b8f3ff);
+  color: #03131f;
+}
+
+.landing-button-secondary {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.landing-proof-list,
+.landing-bullet-list {
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.landing-proof-list li,
+.landing-bullet-list li {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.landing-proof-panel {
+  flex: 0.9;
+  display: grid;
+  gap: 12px;
+}
+
+.landing-proof-metric {
+  border-radius: 20px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.landing-proof-kicker {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.landing-proof-metric strong,
+.landing-panel-card h2 {
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+  font-size: 28px;
+  letter-spacing: -0.03em;
+}
+
+.landing-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.landing-panel-card,
+.landing-demo-card {
+  padding: 22px;
+}
+
+.landing-panel-card h2 {
+  margin: 0 0 10px;
+}
+
+.landing-demo-strip {
+  gap: 16px;
+}
+
+.landing-demo-card {
+  flex: 1;
+}
+
+.landing-demo-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text);
+}
+
+@media (max-width: 1100px) {
+  .landing-hero-grid,
+  .landing-demo-strip,
+  .landing-topbar {
+    flex-direction: column;
+  }
+
+  .landing-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .landing-shell {
+    padding: 20px 16px 40px;
+  }
+
+  .landing-hero-card,
+  .landing-panel-card,
+  .landing-demo-card {
+    border-radius: 22px;
+    padding: 18px;
+  }
+
+  .landing-copy h1 {
+    font-size: clamp(34px, 12vw, 56px);
+  }
+
+  .landing-cta-row {
+    flex-direction: column;
+  }
+
+  .landing-button {
+    text-align: center;
+  }
+}

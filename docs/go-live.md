@@ -6,7 +6,7 @@ This guide turns the local demo into a buyer-facing pilot or a grant-ready publi
 
 - `demo_ready`: local console works with demo data and demo fallback auth.
 - `pilot_ready`: wallet auth, API key validation, and persistent state are configured.
-- `production_ready`: Google auth and live upstream providers are also configured.
+- `production_ready`: Google auth, wallet auth, persistence, and embedded product capabilities are configured for public sharing.
 
 You can inspect the live status at `GET /v1/alert-ops/readiness` or in the `Go-Live Readiness` panel on `/console`.
 
@@ -43,25 +43,17 @@ Notes:
 - If you set it, only users in that Google Workspace can sign in.
 - Google login is useful for sales demos and grant reviewers who should not need a wallet just to inspect the console.
 
-## Live upstream providers
+## Embedded capability model
 
-The product works in demo mode without upstreams. To replace demo data with live feeds, configure:
-
-```bash
-DEEPBOOK_API_BASE_URL=https://your-deepbook-proxy.example
-DEEPBOOK_API_TOKEN=replace-me
-
-VERTICAL_INDEX_API_BASE_URL=https://your-vertical-index.example
-VERTICAL_INDEX_API_KEY=replace-me
-```
+The product now runs its execution, alerting, tenant, replay, API key, and webhook flows from inside `product-api`.
 
 Recommended rollout order:
 
 1. enable persistent state
 2. enable wallet login
 3. enable Google login
-4. connect DeepBook execution telemetry
-5. connect Vertical Index alerting / tenant upstreams
+4. seed at least one monitor, destination, and replayable alert
+5. expose a public HTTPS console for operators and reviewers
 
 ## Local runbook
 
@@ -180,5 +172,5 @@ npm run test:e2e
 - show one Google-enabled operator login flow if credentials are available
 - demonstrate API key issuance and validation
 - demonstrate webhook delivery history and retry
-- explain which upstreams are still demo data vs live integrations
+- explain which seeded data or integrations are already active in the current environment
 - link the public readiness endpoint in the application form or reviewer note

@@ -51,21 +51,21 @@ func buildReadinessResponse(cfg config.Config, deps Dependencies) readinessRespo
 	walletEnabled := deps.WalletVerifier != nil && strings.TrimSpace(cfg.PublicOrigin) != ""
 	apiKeyValidationReady := deps.IdentityService != nil
 	persistentStateEnabled := strings.TrimSpace(cfg.DataFile) != ""
-	deepBookConnected := strings.TrimSpace(cfg.DeepBookAPIBaseURL) != ""
-	verticalIndexConnected := strings.TrimSpace(cfg.VerticalIndexAPIBaseURL) != ""
+	embeddedExecutionReady := true
+	embeddedAlertsReady := true
 
 	status := "setup_required"
 	summary := "Core auth or persistence configuration is still missing."
-	if walletEnabled && apiKeyValidationReady && persistentStateEnabled {
+	if walletEnabled && apiKeyValidationReady && persistentStateEnabled && embeddedExecutionReady && embeddedAlertsReady {
 		status = "pilot_ready"
-		summary = "Core wallet auth, API key validation, and persistent state are ready for demos and paid pilots."
+		summary = "Core wallet auth, API key validation, persistent state, and embedded product capabilities are ready for demos and paid pilots."
 	}
-	if status == "pilot_ready" && googleEnabled && deepBookConnected && verticalIndexConnected {
+	if status == "pilot_ready" && googleEnabled {
 		status = "production_ready"
-		summary = "Auth, persistence, and upstream data providers are configured for public-facing rollout."
+		summary = "Auth, persistence, and embedded product capabilities are ready for public-facing rollout from a single service."
 	}
 
-	nextActions := make([]string, 0, 6)
+	nextActions := make([]string, 0, 5)
 	if !googleEnabled {
 		nextActions = append(nextActions, "Set PRODUCT_API_GOOGLE_CLIENT_ID to enable Google operator login.")
 	}
@@ -78,11 +78,8 @@ func buildReadinessResponse(cfg config.Config, deps Dependencies) readinessRespo
 	if !persistentStateEnabled {
 		nextActions = append(nextActions, "Set PRODUCT_API_DATA_FILE so monitors, deliveries, and API keys persist across restarts.")
 	}
-	if !deepBookConnected {
-		nextActions = append(nextActions, "Set DEEPBOOK_API_BASE_URL to replace demo execution data with live upstream execution telemetry.")
-	}
-	if !verticalIndexConnected {
-		nextActions = append(nextActions, "Set VERTICAL_INDEX_API_BASE_URL to replace demo alert and tenant data with live upstream feeds.")
+	if !embeddedExecutionReady || !embeddedAlertsReady {
+		nextActions = append(nextActions, "Keep the embedded execution, alerting, and tenant capabilities enabled inside product-api.")
 	}
 	if len(nextActions) == 0 {
 		nextActions = append(nextActions, "Point a public domain at /console and start live pilot onboarding.")
@@ -107,8 +104,8 @@ func buildReadinessResponse(cfg config.Config, deps Dependencies) readinessRespo
 			PublicOrigin:           strings.TrimSpace(cfg.PublicOrigin),
 			PersistentStateEnabled: persistentStateEnabled,
 			DataFile:               strings.TrimSpace(cfg.DataFile),
-			DeepBookConnected:      deepBookConnected,
-			VerticalIndexConnected: verticalIndexConnected,
+			DeepBookConnected:      embeddedExecutionReady,
+			VerticalIndexConnected: embeddedAlertsReady,
 		},
 		NextActions: nextActions,
 	}

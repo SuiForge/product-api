@@ -127,19 +127,9 @@ Access model:
 - wallet login remains the required path for wallet-bound actions such as API key generation and webhook provisioning
 - Google login is the best first step for buyers or grant reviewers who should inspect the product before connecting a wallet
 
-## Optional upstream wiring
+## Built-in capability plane
 
-Execution upstream:
-
-- `DEEPBOOK_API_BASE_URL`
-- `DEEPBOOK_API_TOKEN`
-- `DEEPBOOK_API_TIMEOUT`
-
-Alerts and tenant upstream:
-
-- `VERTICAL_INDEX_API_BASE_URL`
-- `VERTICAL_INDEX_API_KEY`
-- `VERTICAL_INDEX_API_TIMEOUT`
+`product-api` now ships its execution, alerting, tenant, replay, API key, and webhook capabilities in-process.
 
 Session and identity configuration:
 
@@ -153,7 +143,7 @@ Session and identity configuration:
 - `PRODUCT_API_GOOGLE_HOSTED_DOMAIN`
 - `PRODUCT_API_DATA_FILE`
 
-If upstreams are not configured, endpoints that depend on them return `501 not_implemented` and the product remains in demo mode for those surfaces.
+No other backend service is required for the current product surface. Public rollout now depends on auth, persistence, and deployment posture rather than separate upstream services.
 
 ## Key routes
 

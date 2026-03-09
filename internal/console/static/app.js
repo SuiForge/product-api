@@ -485,8 +485,8 @@ function renderReadinessView(result) {
     `
       <div><span>Public Origin</span><strong>${escapeHTML(result?.infrastructure?.publicOrigin || '-')}</strong></div>
       <div><span>Persistence</span><strong>${escapeHTML(result?.infrastructure?.persistentStateEnabled ? 'enabled' : 'not ready')}</strong></div>
-      <div><span>DeepBook</span><strong>${escapeHTML(result?.infrastructure?.deepBookConnected ? 'live' : 'demo')}</strong></div>
-      <div><span>Vertical Index</span><strong>${escapeHTML(result?.infrastructure?.verticalIndexConnected ? 'live' : 'demo')}</strong></div>
+      <div><span>Execution Engine</span><strong>${escapeHTML(result?.infrastructure?.deepBookConnected ? 'embedded' : 'not ready')}</strong></div>
+      <div><span>Alerting Core</span><strong>${escapeHTML(result?.infrastructure?.verticalIndexConnected ? 'embedded' : 'not ready')}</strong></div>
     `,
   );
   const nextActions = result?.nextActions || [];
@@ -532,12 +532,12 @@ function grantOnePagerText() {
     '',
     'What Is Live Today',
     `- ${currentAlertsCount()} live alerts are already surfaced in the workspace feed with selectable evidence and routing context.`,
-    `- ${currentTradesCount()} recent DeepBook fills are already summarized with a live execution score of ${currentExecutionScoreText()} on SUI/USDC.`,
+    `- ${currentTradesCount()} recent embedded execution fills are already summarized with a live execution score of ${currentExecutionScoreText()} on SUI/USDC.`,
     `- Replay evidence is already available with current decision state ${currentDecisionText()} and reason codes ${currentReasonsText()}.`,
     `- A product activation path already exists through the preview API key contract ${currentAPIPreviewText()}.`,
     '',
     'Why Sui-Specific',
-    '- The demo is anchored on Sui-native execution telemetry, live DeepBook lifecycle activity, and mainnet transaction evidence that can be inspected externally.',
+    '- The demo is anchored on Sui-native execution telemetry, embedded execution lifecycle activity, and mainnet transaction evidence that can be inspected externally.',
     '- This positions the product as a reusable execution intelligence layer for Sui trading, monitoring, and builder operations rather than a generic dashboard.',
     '',
     'Next Milestone',
@@ -575,7 +575,7 @@ function conversionSummaryText() {
   if (conversionMode === 'grant') {
     return [
       `This Sui-native operator workspace already demonstrates live execution telemetry for ${projectName}.`,
-      `The current demo surfaces ${alertsCount} real anomaly alerts, ${trades} recent DeepBook fills, and an execution score of ${executionScore} on a live SUI/USDC pool.`,
+      `The current demo surfaces ${alertsCount} real anomaly alerts, ${trades} recent embedded execution fills, and an execution score of ${executionScore} on a live SUI/USDC pool.`,
       `It also produces replayable risk evidence with the current decision state ${decision} and reason codes ${reasons}.`,
       `The next milestone is to turn these primitives into a reusable product layer for Sui builders, operators, and ecosystem monitoring workflows.`
     ].join(' ');
@@ -1227,7 +1227,7 @@ async function loadWorkspace() {
     setStepState('workspace', 'done', 'Alert ops overview loaded. The buyer can now see plan, request load, and alert volume.');
   } catch (error) {
     write('workspace-log', `Alert ops overview unavailable\n${error.message}`);
-    setStepState('workspace', 'pending', 'Overview unavailable. Configure tenant and alerts upstream to complete the first step.');
+    setStepState('workspace', 'pending', 'Overview unavailable. Initialize embedded workspace data to complete the first step.');
   }
 }
 
@@ -1398,7 +1398,7 @@ async function loadAlerts() {
     setStepState('alerts', 'done', 'Live alerts synced. Select one to inspect evidence and open replay.');
   } catch (error) {
     write('alerts-result', `Alerts unavailable\n${error.message}`);
-    setStepState('alerts', 'pending', 'Alert feed unavailable. Configure alerts upstream to complete this step.');
+    setStepState('alerts', 'pending', 'Alert feed unavailable. Initialize embedded alerting data to complete this step.');
   }
 }
 
@@ -1429,7 +1429,7 @@ async function createDestination(event) {
     setStepState('webhook', 'done', 'Webhook destination configured. The product now feels operational and recurring.');
   } catch (error) {
     write('destination-result', `Create destination failed\n${error.message}`);
-    setStepState('webhook', 'pending', 'Webhook setup failed. Configure alerts upstream to complete this step.');
+    setStepState('webhook', 'pending', 'Webhook setup failed. Initialize embedded alerting data to complete this step.');
   }
 }
 

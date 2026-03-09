@@ -33,6 +33,7 @@ func NewRouter(cfg config.Config, deps Dependencies) *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Recovery())
 
+	r.GET("/", gin.WrapH(console.LandingHandler()))
 	r.GET("/health", func(c *gin.Context) { c.JSON(http.StatusOK, gin.H{"status": "ok"}) })
 	r.GET("/console", gin.WrapH(console.IndexHandler()))
 	r.GET("/console/app.js", gin.WrapH(console.ScriptHandler()))

@@ -53,7 +53,7 @@ Use milestones that reviewers can verify quickly:
 ### Milestone 3: live ecosystem integrations
 
 - real execution telemetry source
-- real alert or tenant upstream source
+- embedded execution and alerting data active
 - production-ready readiness status
 
 ### Milestone 4: partner onboarding package
@@ -82,12 +82,12 @@ Use milestones that reviewers can verify quickly:
 
 ## Honest disclosure section
 
-Be explicit about what is already live versus what is demo-backed.
+Be explicit about which embedded capabilities are already active in the current deployment.
 
 Suggested language:
 
 - operator console, auth, API keys, webhook flows, replay, deployment tooling, and CI are already implemented
-- some alert or execution sources may still be demo-backed until final upstream providers are wired
+- the deployment may still use seeded embedded datasets for some flows while buyer-specific integrations are being onboarded
 - the readiness endpoint is included so reviewers can see the current state without guessing
 
 ## Submission checklist

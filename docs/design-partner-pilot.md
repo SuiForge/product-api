@@ -38,7 +38,7 @@ This keeps onboarding tight while still demonstrating a real product loop.
 
 - a shareable console at `/console`
 - `Go-Live Readiness` that explains current deployment status
-- live or demo-backed overview and alert feed
+- embedded overview and alert feed
 - signed webhook delivery flow with history and retry
 - replay evidence view for explaining why an alert fired
 - API key issuance for automation or internal integrations
@@ -57,7 +57,7 @@ Minimum pilot-ready configuration:
 Recommended before a serious buyer call:
 
 - Google login enabled
-- at least one real upstream source enabled
+- embedded execution and alerting flows verified
 - one seeded monitor and one replayable alert already visible
 - one working webhook endpoint for delivery proof
 
@@ -101,4 +101,4 @@ Share these with the partner after the call:
 - readiness endpoint for the deployed environment
 - `docs/go-live.md`
 - `docs/google-login-launch.md`
-- a short note explaining which data sources are live and which are still demo-backed
+- a short note explaining which embedded data and external integrations are active in the shared environment

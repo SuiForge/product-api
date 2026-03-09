@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"product-api/internal/api"
@@ -62,8 +63,8 @@ func TestReadinessRouteReturnsGoLiveStatus(t *testing.T) {
 	if service["id"] != "sui-alert-ops" {
 		t.Fatalf("expected service id, got %+v", service)
 	}
-	if payload["status"] != "pilot_ready" {
-		t.Fatalf("expected pilot_ready status, got %+v", payload)
+	if payload["status"] != "production_ready" {
+		t.Fatalf("expected production_ready status, got %+v", payload)
 	}
 	auth, _ := payload["auth"].(map[string]any)
 	if auth["googleEnabled"] != true {
@@ -76,5 +77,44 @@ func TestReadinessRouteReturnsGoLiveStatus(t *testing.T) {
 	nextActions, _ := payload["nextActions"].([]any)
 	if len(nextActions) == 0 {
 		t.Fatalf("expected nextActions, got %+v", payload)
+	}
+}
+
+func TestReadinessRouteReturnsProductionReadyWithoutExternalServiceDependencies(t *testing.T) {
+	t.Parallel()
+
+	router := api.NewRouter(config.Config{
+		PublicOrigin:       "https://alertops.example.com",
+		SuiNetwork:         "mainnet",
+		GoogleClientID:     "google-client-id.apps.googleusercontent.com",
+		GoogleHostedDomain: "example.com",
+		DataFile:           "data/product-api-state.json",
+	}, api.Dependencies{
+		WalletVerifier:  readinessWalletVerifier{},
+		GoogleVerifier:  readinessGoogleVerifier{},
+		IdentityService: readinessAPIKeyValidator{},
+	})
+
+	req := httptest.NewRequest(http.MethodGet, "/v1/alert-ops/readiness", nil)
+	rec := httptest.NewRecorder()
+	router.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d body=%s", rec.Code, rec.Body.String())
+	}
+
+	var payload map[string]any
+	if err := json.Unmarshal(rec.Body.Bytes(), &payload); err != nil {
+		t.Fatalf("unmarshal response: %v", err)
+	}
+	if payload["status"] != "production_ready" {
+		t.Fatalf("expected production_ready status, got %+v", payload)
+	}
+	nextActions, _ := payload["nextActions"].([]any)
+	for _, item := range nextActions {
+		text, _ := item.(string)
+		if strings.Contains(text, "DEEPBOOK_API_BASE_URL") || strings.Contains(text, "VERTICAL_INDEX_API_BASE_URL") {
+			t.Fatalf("expected no external-service next actions, got %+v", nextActions)
+		}
 	}
 }
